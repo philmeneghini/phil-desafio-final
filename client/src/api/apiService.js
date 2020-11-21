@@ -5,110 +5,92 @@ revisar isso aqui
 
 const API_URL = 'http://localhost:3001/api/transaction';
 
-async function getAllTransactions() {
-  const res = await axios.get(API_URL);
+//serve pra jogar pro backend
+//const algumacoisa = await api.get(`${RESOURCE}?period={yearMonth}`)
 
-  const transactions = res.data.transactions.map((transaction) => {
+// fazer com api.métodoHTTP pra buscar do backend
+
+//implementar getAllPeriods
+/*
+
+function _prepareTransaction(transaction){
+  const { description, category, _id: id, month, ...otherFields} = transaction;
+  return {
+    id, description,
+    cateory,
+    month,
+    descriptionLowerCase: description.tolowercase();
+    categorylowercase
+    montDescription
+    ...otherFields
+  }
+}
+*/
+
+// async function getAllTransactions() {
+//   const res = await axios.get(`${API_URL}/findAll`);
+
+//   const transactions = res.data.transactions.map((transaction) => {
+//     const { description, value, yearMonth, type } = transaction;
+//     return {
+//       ...transaction,
+//       descriptionLowerCase: description.toLowerCase(),
+//     };
+//   });
+
+//   return transactions;
+// }
+
+async function getTransactions(period) {
+  const res = await axios.get(`${API_URL}/findTP/?period=${period}`);
+
+  console.log(res.data);
+
+  const transactions = res.data.map((transaction) => {
     const { description, value, yearMonth, type } = transaction;
     return {
-      ...transaction,
+      description,
+      value,
+      yearMonth,
+      type,
       descriptionLowerCase: description.toLowerCase(),
     };
   });
 
-  let allTransactions = new Set();
-  transactions.forEach((transaction) =>
-    allTransactions.add(transaction.student)
-  );
-  allTransactions = Array.from(allTransactions);
-
-  let maxId = -1;
-
-  transactions.forEach(({ id }) => {
-    if (id > maxId) {
-      maxId = id;
-    }
-  });
-
-  let nextId = maxId + 1;
-
-  const allCombinations = [];
-
-  allStudents.forEach((student) => {
-    allSubjects.forEach((subject) => {
-      allGradeTypes.forEach((type) => {
-        allCombinations.push({
-          student,
-          subject,
-          type,
-        });
-      });
-    });
-  });
-
-  allCombinations.forEach(({ student, subject, type }) => {
-    const hasItem = grades.find((grade) => {
-      return (
-        grade.subject === subject &&
-        grade.student === student &&
-        grade.type === type
-      );
-    });
-
-    if (!hasItem) {
-      grades.push({
-        id: nextId++,
-        student,
-        studentLowerCase: student.toLowerCase(),
-        subject,
-        subjectLowerCase: subject.toLowerCase(),
-        type,
-        typeLowerCase: type.toLowerCase(),
-        value: 0,
-        isDeleted: true,
-      });
-    }
-  });
-
-  grades.sort((a, b) => a.typeLowerCase.localeCompare(b.typeLowerCase));
-  grades.sort((a, b) => a.subjectLowerCase.localeCompare(b.subjectLowerCase));
-  grades.sort((a, b) => a.studentLowerCase.localeCompare(b.studentLowerCase));
-
-  return grades;
+  return transactions;
 }
 
-async function insertGrade(grade) {
-  const response = await axios.post(API_URL, grade);
+// async function getOneTransaction(id) {
+//   const res = await axios.get(`${API_URL}/findOne/${id}`);
+
+//   const transaction = {
+//     ...res.data.transactions,
+//     descriptionLowerCase: res.data.transactions.description.toLowerCase(),
+//   };
+
+//   return transaction;
+// }
+
+async function insertTransaction(transaction) {
+  const response = await axios.post(`${API_URL}/create`, transaction);
   return response.data.id;
 }
 
-async function updateGrade(grade) {
-  const response = await axios.put(API_URL, grade);
+async function updateTransaction(transaction) {
+  const response = await axios.put(API_URL, transaction);
   return response.data;
 }
 
-async function deleteGrade(grade) {
-  const response = await axios.delete(`${API_URL}/${grade.id}`);
+async function deleteTransaction(id) {
+  const response = await axios.delete(`${API_URL}/${id}`);
   return response.data;
 }
 
-async function getValidationFromGradeType(gradeType) {
-  const gradeValidation = GRADE_VALIDATION.find(
-    (item) => item.gradeType === gradeType
-  );
-
-  const { minValue, maxValue } = gradeValidation;
-
-  return {
-    minValue,
-    maxValue,
-  };
-}
-
-export {
-  getAllGrades,
-  insertGrade,
-  updateGrade,
-  deleteGrade,
-  getValidationFromGradeType,
+export default {
+  // getAllTransactions,
+  getTransactions,
+  // getOneTransaction,
+  insertTransaction,
+  updateTransaction,
+  deleteTransaction,
 };
