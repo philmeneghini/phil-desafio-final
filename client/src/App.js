@@ -48,7 +48,10 @@ export default function App() {
   }, [currentMonth]);
 
   useEffect(() => {
-    const filterTransactions = () => {
+    /*  if (filterText.trim() === '') {
+      setCurrentTransactions([...currentTransactions]);
+    } else {
+    */ const filterTransactions = () => {
       const filteredTransactions = toFilterText(
         currentTransactions,
         filterText
@@ -56,6 +59,8 @@ export default function App() {
       setCurrentTransactions(filteredTransactions);
     };
     filterTransactions();
+    //}
+    //}, [filterText, currentTransactions]);
   }, [filterText]);
 
   return (

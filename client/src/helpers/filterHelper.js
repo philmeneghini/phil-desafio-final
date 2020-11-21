@@ -1,6 +1,7 @@
 function toFilterText(launches, filter) {
+  const lowerCaseFilter = filter.toLowerCase();
   const filteredLaunches = launches.filter((launch) =>
-    launch.description.includes(filter)
+    launch.descriptionLowerCase.includes(lowerCaseFilter)
   );
 
   return filteredLaunches;
